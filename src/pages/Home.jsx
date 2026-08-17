@@ -9,6 +9,11 @@ function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Timeout fallback so page doesn't get stuck on "Loading..." if Firebase blocks it
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
     const fetchData = async () => {
       try {
         const homeDoc = await getDoc(doc(db, 'content', 'homepage'));
@@ -19,13 +24,16 @@ function Home() {
       } catch (error) {
         console.error("Error fetching home data:", error);
       } finally {
+        clearTimeout(timeout);
         setLoading(false);
       }
     };
     fetchData();
+    
+    return () => clearTimeout(timeout);
   }, []);
 
-  if (loading) return <div style={{padding: '100px', textAlign: 'center'}}>Loading...</div>;
+  if (loading) return <div style={{padding: '100px', textAlign: 'center', fontSize: '20px', color: '#64748b'}}>Connecting to database...</div>;
 
   return (
     <main id="home">
@@ -42,7 +50,7 @@ function Home() {
             <div className="hero-note"><span className="dot"></span> {homepage?.name || 'Fabroklean'}</div>
           </div>
           <div className="hero-visual">
-            <div className="photo" role="img" aria-label="Freshly cleaned and folded laundry"></div>
+            <div className="photo" role="img" aria-label="Freshly cleaned and folded laundry" style={homepage?.bannerImage ? { backgroundImage: `url(${homepage.bannerImage})` } : {}}></div>
             <div className="float-card experience"><strong>10+</strong><span>Years of experience</span></div>
             <div className="float-card pickup"><strong>Doorstep</strong><span>Pickup & delivery</span></div>
           </div>
@@ -62,15 +70,14 @@ function Home() {
           <div className="service-grid">
             {services.length > 0 ? services.map((srv, idx) => (
               <article className="service" key={idx}>
-                {/* We use a placeholder image for dynamically added services since they don't upload images yet */}
-                <div className="service-img" style={{backgroundImage:`url('https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=700&q=80')`}}></div>
+                <div className="service-img" style={{backgroundImage:`url('${srv.image || 'https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=700&q=80'}')`}}></div>
                 <div className="service-body">
                   <h3>{srv.icon} {srv.title}</h3>
                   <p>{srv.desc}</p>
                 </div>
               </article>
             )) : (
-              <p>Loading services...</p>
+              <p style={{ color: '#64748b' }}>No services published yet. Go to Admin Dashboard to add services.</p>
             )}
           </div>
         </div>
@@ -90,3 +97,4 @@ function Home() {
 }
 
 export default Home;
+

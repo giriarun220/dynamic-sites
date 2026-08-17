@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, Timestamp, updateDoc } from 'firebase/firestore';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ImageUpload from '../components/ImageUpload';
@@ -24,6 +24,7 @@ function Admin() {
   // Blog States
   const [posts, setPosts] = useState([]);
   const [isCreatingPost, setIsCreatingPost] = useState(false);
+  const [editingPostId, setEditingPostId] = useState(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [thumbnail, setThumbnail] = useState('');
@@ -61,7 +62,7 @@ function Admin() {
 
       const querySnapshot = await getDocs(collection(db, 'blogs'));
       const postsData = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      setPosts(postsData);
+      setPosts(postsData.sort((a, b) => b.date - a.date)); // Sort newest first
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -124,25 +125,57 @@ function Admin() {
   const handlePublishPost = async () => {
     if (!title || !content) return alert("Title and content required!");
     try {
-      await addDoc(collection(db, 'blogs'), {
-        title,
-        content,
-        thumbnail,
-        date: Timestamp.now(),
-        excerpt: content.replace(/<[^>]+>/g, '').substring(0, 150) + '...'
-      });
+      const excerpt = content.replace(/<[^>]+>/g, '').substring(0, 150) + '...';
+      
+      if (editingPostId) {
+        await updateDoc(doc(db, 'blogs', editingPostId), {
+          title,
+          content,
+          thumbnail,
+          excerpt,
+          // We intentionally do not update the date so it keeps its original publish date
+        });
+        alert("Post updated successfully!");
+      } else {
+        await addDoc(collection(db, 'blogs'), {
+          title,
+          content,
+          thumbnail,
+          excerpt,
+          date: Timestamp.now()
+        });
+        alert("Post created successfully!");
+      }
+
       setTitle('');
       setContent('');
       setThumbnail('');
       setIsCreatingPost(false);
+      setEditingPostId(null);
       fetchAllData();
     } catch (error) {
-      alert("Error publishing post. Check console.");
+      alert("Error saving post. Check console.");
     }
   };
 
+  const handleEditPost = (post) => {
+    setEditingPostId(post.id);
+    setTitle(post.title);
+    setContent(post.content);
+    setThumbnail(post.thumbnail || '');
+    setIsCreatingPost(true);
+  };
+
+  const cancelEdit = () => {
+    setIsCreatingPost(false);
+    setEditingPostId(null);
+    setTitle('');
+    setContent('');
+    setThumbnail('');
+  };
+
   const handleDeletePost = async (id) => {
-    if (window.confirm("Delete this post?")) {
+    if (window.confirm("Are you sure you want to permanently delete this post?")) {
       await deleteDoc(doc(db, 'blogs', id));
       fetchAllData();
     }
@@ -321,8 +354,8 @@ function Admin() {
             {isCreatingPost ? (
               <div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px'}}>
-                  <h2 style={{margin: 0}}>Write New Post</h2>
-                  <button className="btn btn-light" onClick={() => setIsCreatingPost(false)}>Cancel</button>
+                  <h2 style={{margin: 0}}>{editingPostId ? 'Edit Post' : 'Write New Post'}</h2>
+                  <button className="btn btn-light" onClick={cancelEdit}>Cancel</button>
                 </div>
                 
                 <div className="field full" style={{marginBottom: '20px'}}>
@@ -337,7 +370,9 @@ function Admin() {
                   <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '10px' }}>Content</label>
                   <ReactQuill theme="snow" value={content} onChange={setContent} style={{height: '350px', marginBottom: '60px'}} />
                 </div>
-                <button className="btn btn-primary" onClick={handlePublishPost} style={{padding: '12px 24px', fontSize: '16px'}}>Publish Post</button>
+                <button className="btn btn-primary" onClick={handlePublishPost} style={{padding: '12px 24px', fontSize: '16px'}}>
+                  {editingPostId ? 'Save Changes' : 'Publish Post'}
+                </button>
               </div>
             ) : (
               <div>
@@ -353,15 +388,22 @@ function Admin() {
                 ) : (
                   <div style={{display: 'grid', gap: '20px'}}>
                     {posts.map(post => (
-                      <div key={post.id} style={{padding: '24px', border: '1px solid #e2e8f0', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc'}}>
+                      <div key={post.id} style={{padding: '24px', border: '1px solid #e2e8f0', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', boxShadow: '0 2px 4px rgba(0,0,0,0.02)'}}>
                         <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                          {post.thumbnail && <img src={post.thumbnail} alt="thumb" style={{ width: '80px', height: '60px', objectFit: 'cover', borderRadius: '6px' }} />}
+                          {post.thumbnail ? (
+                            <img src={post.thumbnail} alt="thumb" style={{ width: '100px', height: '70px', objectFit: 'cover', borderRadius: '8px' }} />
+                          ) : (
+                            <div style={{ width: '100px', height: '70px', background: '#e2e8f0', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: '12px' }}>No Image</div>
+                          )}
                           <div>
                             <h4 style={{margin: '0 0 5px', fontSize: '18px', color: '#0f172a'}}>{post.title}</h4>
                             <span style={{fontSize: '13px', color: '#64748b'}}>Published on {post.date?.toDate().toLocaleDateString()}</span>
                           </div>
                         </div>
-                        <button className="btn btn-light" onClick={() => handleDeletePost(post.id)} style={{color: '#ef4444', border: '1px solid #fca5a5'}}>Delete</button>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <button className="btn btn-light" onClick={() => handleEditPost(post)} style={{color: '#3b82f6', border: '1px solid #bfdbfe'}}>Edit</button>
+                          <button className="btn btn-light" onClick={() => handleDeletePost(post.id)} style={{color: '#ef4444', border: '1px solid #fca5a5'}}>Delete</button>
+                        </div>
                       </div>
                     ))}
                   </div>

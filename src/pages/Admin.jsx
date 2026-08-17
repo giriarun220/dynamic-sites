@@ -15,6 +15,8 @@ function Admin() {
 
   // Content States
   const [homepage, setHomepage] = useState({ name: '', operator: '', headline: '', address: '', bannerImage: '' });
+  const [about, setAbout] = useState({ headline: '', paragraph: '', heroImage: '' });
+  const [contact, setContact] = useState({ address: '', hours: '', instagram: '', facebook: '', twitter: '' });
   const [services, setServices] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [settings, setSettings] = useState({ phone: '', email: '', mapUrl: '', emergency: '' });
@@ -39,23 +41,24 @@ function Admin() {
 
   const fetchAllData = async () => {
     try {
-      // Fetch Homepage
       const homeDoc = await getDoc(doc(db, 'content', 'homepage'));
       if (homeDoc.exists()) setHomepage(homeDoc.data());
 
-      // Fetch Services
+      const aboutDoc = await getDoc(doc(db, 'content', 'about'));
+      if (aboutDoc.exists()) setAbout(aboutDoc.data());
+
+      const contactDoc = await getDoc(doc(db, 'content', 'contact'));
+      if (contactDoc.exists()) setContact(contactDoc.data());
+
       const servDoc = await getDoc(doc(db, 'content', 'services'));
       if (servDoc.exists()) setServices(servDoc.data().items || []);
 
-      // Fetch Doctors
       const docDoc = await getDoc(doc(db, 'content', 'doctors'));
       if (docDoc.exists()) setDoctors(docDoc.data().items || []);
 
-      // Fetch Settings
       const setDocRef = await getDoc(doc(db, 'content', 'settings'));
       if (setDocRef.exists()) setSettings(setDocRef.data());
 
-      // Fetch Blogs
       const querySnapshot = await getDocs(collection(db, 'blogs'));
       const postsData = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       setPosts(postsData);
@@ -91,6 +94,16 @@ function Admin() {
   const saveHomepage = async () => {
     await setDoc(doc(db, 'content', 'homepage'), homepage);
     alert("Homepage saved!");
+  };
+
+  const saveAbout = async () => {
+    await setDoc(doc(db, 'content', 'about'), about);
+    alert("About page saved!");
+  };
+
+  const saveContact = async () => {
+    await setDoc(doc(db, 'content', 'contact'), contact);
+    alert("Contact page saved!");
   };
 
   const saveSettings = async () => {
@@ -135,7 +148,6 @@ function Admin() {
     }
   };
 
-  // --- RENDERERS ---
   if (loading) return <div style={{padding: '100px', textAlign: 'center'}}>Loading...</div>;
 
   if (!user) {
@@ -169,10 +181,12 @@ function Admin() {
         
         <nav className="admin-nav" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <a href="#" className={activeTab === 'homepage' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('homepage');}}>🏠 Homepage</a>
+          <a href="#" className={activeTab === 'about' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('about');}}>ℹ️ About Us</a>
+          <a href="#" className={activeTab === 'contact' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('contact');}}>📞 Contact Us</a>
           <a href="#" className={activeTab === 'services' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('services');}}>✨ Services</a>
           <a href="#" className={activeTab === 'doctors' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('doctors');}}>👥 Team Members</a>
-          <a href="#" className={activeTab === 'settings' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('settings');}}>⚙️ Global Settings</a>
           <a href="#" className={activeTab === 'blog' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('blog');}}>📝 Blog Posts</a>
+          <a href="#" className={activeTab === 'settings' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('settings');}}>⚙️ Global Settings</a>
           <button className="btn btn-light" style={{marginTop: '40px', background: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none'}} onClick={handleLogout}>Logout</button>
         </nav>
       </aside>
@@ -200,14 +214,47 @@ function Admin() {
           </div>
         )}
 
+        {/* ABOUT TAB */}
+        {activeTab === 'about' && (
+          <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ marginTop: 0, marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>About Us Page</h2>
+            <div className="field full"><label>Headline</label><input value={about.headline || ''} onChange={e => setAbout({...about, headline: e.target.value})} placeholder="e.g. Your local laundry partner in Ballari." /></div>
+            <div className="field full"><label>Main Paragraph</label><textarea value={about.paragraph || ''} onChange={e => setAbout({...about, paragraph: e.target.value})} style={{minHeight: '120px'}} placeholder="Write about your company history and mission..." /></div>
+            
+            <ImageUpload label="About Page Hero Image" onUploadSuccess={(url) => setAbout({...about, heroImage: url})} />
+            {about.heroImage && (
+              <div style={{ marginTop: '10px' }}>
+                <p style={{ fontSize: '14px', color: '#64748b' }}>Current Image:</p>
+                <img src={about.heroImage} alt="About Hero" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '8px' }} />
+              </div>
+            )}
+            <button className="btn btn-primary" onClick={saveAbout} style={{marginTop: '30px', padding: '12px 24px'}}>Save About Page</button>
+          </div>
+        )}
+
+        {/* CONTACT TAB */}
+        {activeTab === 'contact' && (
+          <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ marginTop: 0, marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>Contact Page Details</h2>
+            <div className="field full"><label>Office Address (Detailed)</label><textarea value={contact.address || ''} onChange={e => setContact({...contact, address: e.target.value})} style={{minHeight: '80px'}} placeholder="Full physical address for the contact page" /></div>
+            <div className="field full"><label>Working Hours</label><input value={contact.hours || ''} onChange={e => setContact({...contact, hours: e.target.value})} placeholder="e.g. Mon - Sat: 9:00 AM - 8:00 PM" /></div>
+            <h3 style={{ marginTop: '30px', color: '#334155' }}>Social Media Links</h3>
+            <div className="field full"><label>Instagram URL</label><input value={contact.instagram || ''} onChange={e => setContact({...contact, instagram: e.target.value})} placeholder="https://instagram.com/..." /></div>
+            <div className="field full"><label>Facebook URL</label><input value={contact.facebook || ''} onChange={e => setContact({...contact, facebook: e.target.value})} placeholder="https://facebook.com/..." /></div>
+            <div className="field full"><label>Twitter/X URL</label><input value={contact.twitter || ''} onChange={e => setContact({...contact, twitter: e.target.value})} placeholder="https://twitter.com/..." /></div>
+            <button className="btn btn-primary" onClick={saveContact} style={{marginTop: '30px', padding: '12px 24px'}}>Save Contact Page</button>
+          </div>
+        )}
+
         {/* SETTINGS TAB */}
         {activeTab === 'settings' && (
           <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
             <h2 style={{ marginTop: 0, marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>Global Settings</h2>
-            <div className="field full"><label>Emergency Number</label><input value={settings.emergency || ''} onChange={e => setSettings({...settings, emergency: e.target.value})} /></div>
+            <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '20px' }}>These settings appear in the navigation bar and footer across the whole site.</p>
+            <div className="field full"><label>Emergency / Urgent Number</label><input value={settings.emergency || ''} onChange={e => setSettings({...settings, emergency: e.target.value})} /></div>
             <div className="field full"><label>General Phone</label><input value={settings.phone || ''} onChange={e => setSettings({...settings, phone: e.target.value})} /></div>
             <div className="field full"><label>Email Address</label><input value={settings.email || ''} onChange={e => setSettings({...settings, email: e.target.value})} /></div>
-            <div className="field full"><label>Google Maps URL</label><input value={settings.mapUrl || ''} onChange={e => setSettings({...settings, mapUrl: e.target.value})} /></div>
+            <div className="field full"><label>Google Maps Embed URL</label><input value={settings.mapUrl || ''} onChange={e => setSettings({...settings, mapUrl: e.target.value})} /></div>
             <button className="btn btn-primary" onClick={saveSettings} style={{marginTop: '30px', padding: '12px 24px'}}>Save Settings</button>
           </div>
         )}

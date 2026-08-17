@@ -1,12 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { db } from '../firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 function Contact() {
+  const [contactData, setContactData] = useState(null);
+  const [settingsData, setSettingsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Timeout fallback if Firebase is unreachable/keys missing
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
+    const fetchData = async () => {
+      try {
+        const contactDoc = await getDoc(doc(db, 'content', 'contact'));
+        if (contactDoc.exists()) setContactData(contactDoc.data());
+
+        const settingsDoc = await getDoc(doc(db, 'content', 'settings'));
+        if (settingsDoc.exists()) setSettingsData(settingsDoc.data());
+      } catch (error) {
+        console.error("Error fetching contact data:", error);
+      } finally {
+        clearTimeout(timeout);
+        setLoading(false);
+      }
+    };
+    fetchData();
+    
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const phone = settingsData?.phone || '+91 9449422175';
+  const rawPhone = phone.replace(/\D/g, '');
+
   const submitForm = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const text = `Hi Fabroklean, I would like to book a service.%0A%0AName: ${encodeURIComponent(formData.get('name'))}%0APhone: ${encodeURIComponent(formData.get('phone'))}%0AService: ${encodeURIComponent(formData.get('service'))}%0AMessage: ${encodeURIComponent(formData.get('message'))}`;
-    window.open(`https://wa.me/919449422175?text=${text}`, '_blank');
+    window.open(`https://wa.me/${rawPhone}?text=${text}`, '_blank');
   };
+
+  if (loading) return <div style={{padding: '100px', textAlign: 'center', fontSize: '20px', color: '#64748b'}}>Connecting to database...</div>;
 
   return (
     <main>
@@ -23,19 +59,27 @@ function Contact() {
               <h3>Fabroklean</h3>
               <div className="contact-row">
                 <div>☎</div>
-                <div><b>Phone</b><span><a href="tel:+919449422175">+91 9449422175</a></span></div>
+                <div><b>Phone</b><span><a href={`tel:${phone}`}>{phone}</a></span></div>
               </div>
               <div className="contact-row">
                 <div>✉</div>
-                <div><b>Email</b><span><a href="mailto:info@FabroKlean.com">info@FabroKlean.com</a></span></div>
+                <div><b>Email</b><span><a href={`mailto:${settingsData?.email || 'info@FabroKlean.com'}`}>{settingsData?.email || 'info@FabroKlean.com'}</a></span></div>
               </div>
               <div className="contact-row">
                 <div>⌖</div>
-                <div><b>Location</b><span>Opp to Fire Station, Ballari, 583104, Karnataka</span></div>
+                <div><b>Location</b><span style={{whiteSpace: 'pre-wrap'}}>{contactData?.address || 'Opp to Fire Station, Ballari, 583104, Karnataka'}</span></div>
               </div>
-              <div className="actions">
-                <a className="btn btn-primary" href="tel:+919449422175">Call Now</a>
-                <a className="btn btn-light" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=Fabroklean%2C%20Opp%20to%20Fire%20Station%2C%20Ballari%2C%20583104%2C%20Karnataka">Get Directions</a>
+              
+              {contactData?.hours && (
+                <div className="contact-row" style={{marginTop: '15px'}}>
+                  <div>⏱</div>
+                  <div><b>Working Hours</b><span>{contactData.hours}</span></div>
+                </div>
+              )}
+
+              <div className="actions" style={{marginTop: '30px'}}>
+                <a className="btn btn-primary" href={`tel:${phone}`}>Call Now</a>
+                <a className="btn btn-light" target="_blank" rel="noopener noreferrer" href={settingsData?.mapUrl || "https://www.google.com/maps/search/?api=1&query=Fabroklean%2C%20Opp%20to%20Fire%20Station%2C%20Ballari%2C%20583104%2C%20Karnataka"}>Get Directions</a>
               </div>
             </div>
             

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, Timestamp, updateDoc } from 'firebase/firestore';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 import ImageUpload from '../components/ImageUpload';
 
 function Admin() {

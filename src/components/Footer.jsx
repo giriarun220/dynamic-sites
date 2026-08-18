@@ -38,8 +38,12 @@ function Footer() {
         <div className="container">
           <div className="footer-grid">
             <div>
-              <div className="brand" style={{ color: '#fff' }}>
-                <span className="brandmark">F</span>Fabroklean
+              <div className="brand" style={{ color: '#fff', marginBottom: '15px' }}>
+                {settings?.logo ? (
+                  <img src={settings.logo} alt="Logo" style={{ maxHeight: '50px', display: 'block' }} />
+                ) : (
+                  <><span className="brandmark">F</span>Fabroklean</>
+                )}
               </div>
               <p style={{ maxWidth: '420px', fontSize: '14px' }}>
                 Professional laundry and dry-cleaning services in Ballari, focused on quality, consistency, fabric care and customer convenience.

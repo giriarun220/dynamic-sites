@@ -4,6 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 
 function About() {
   const [aboutData, setAboutData] = useState(null);
+  const [teamData, setTeamData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,6 +17,9 @@ function About() {
       try {
         const aboutDoc = await getDoc(doc(db, 'content', 'about'));
         if (aboutDoc.exists()) setAboutData(aboutDoc.data());
+
+        const teamDoc = await getDoc(doc(db, 'content', 'doctors'));
+        if (teamDoc.exists()) setTeamData(teamDoc.data().items || []);
       } catch (error) {
         console.error("Error fetching about data:", error);
       } finally {
@@ -68,6 +72,33 @@ function About() {
            </div>
         </div>
       </section>
+
+      {teamData.length > 0 && (
+        <section style={{padding: '80px 0', background: '#f8fafc'}}>
+          <div className="container">
+            <div className="section-head">
+              <h2>Meet Our Team</h2>
+              <p>The professionals behind our premium services.</p>
+            </div>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px'}}>
+              {teamData.map((member, idx) => (
+                <div key={idx} style={{background: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--line)', textAlign: 'center', paddingBottom: '20px'}}>
+                  {member.image ? (
+                    <div style={{width: '100%', height: '250px', backgroundImage: `url(${member.image})`, backgroundSize: 'cover', backgroundPosition: 'center', marginBottom: '20px'}}></div>
+                  ) : (
+                    <div style={{width: '100%', height: '250px', background: '#e2e8f0', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                       <span style={{fontSize: '40px', color: '#94a3b8'}}>👤</span>
+                    </div>
+                  )}
+                  <h3 style={{margin: '0 0 5px'}}>{member.name}</h3>
+                  <div style={{color: '#0ea5e9', fontWeight: 'bold', fontSize: '14px', marginBottom: '15px'}}>{member.role}</div>
+                  <p style={{color: 'var(--muted)', fontSize: '14px', padding: '0 20px'}}>{member.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

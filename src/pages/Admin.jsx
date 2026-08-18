@@ -20,7 +20,7 @@ function Admin() {
   const [contact, setContact] = useState({ address: '', hours: '', instagram: '', facebook: '', twitter: '' });
   const [services, setServices] = useState([]);
   const [doctors, setDoctors] = useState([]);
-  const [settings, setSettings] = useState({ phone: '', email: '', mapUrl: '', emergency: '' });
+  const [settings, setSettings] = useState({ phone: '', email: '', mapUrl: '', emergency: '', logo: '' });
   
   // Blog States
   const [posts, setPosts] = useState([]);
@@ -297,6 +297,15 @@ function Admin() {
             <div className="field full"><label>General Phone</label><input value={settings.phone || ''} onChange={e => setSettings({...settings, phone: e.target.value})} /></div>
             <div className="field full"><label>Email Address</label><input value={settings.email || ''} onChange={e => setSettings({...settings, email: e.target.value})} /></div>
             <div className="field full"><label>Google Maps Embed URL</label><input value={settings.mapUrl || ''} onChange={e => setSettings({...settings, mapUrl: e.target.value})} /></div>
+            
+            <ImageUpload label="Website Logo (Navbar & Footer)" onUploadSuccess={(url) => setSettings({...settings, logo: url})} />
+            {settings.logo && (
+              <div style={{ marginTop: '10px' }}>
+                <p style={{ fontSize: '14px', color: '#64748b' }}>Current Logo:</p>
+                <img src={settings.logo} alt="Logo" style={{ maxHeight: '60px', objectFit: 'contain', borderRadius: '4px' }} />
+              </div>
+            )}
+
             <button className="btn btn-primary" onClick={saveSettings} style={{marginTop: '30px'}}>Save Settings</button>
           </div>
         )}

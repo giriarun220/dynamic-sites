@@ -77,6 +77,17 @@ function Contact() {
                 </div>
               )}
 
+              {(contactData?.instagram || contactData?.facebook || contactData?.twitter) && (
+                <div style={{marginTop: '25px', paddingTop: '20px', borderTop: '1px solid var(--line)'}}>
+                  <h4 style={{margin: '0 0 10px', fontSize: '15px'}}>Follow Us</h4>
+                  <div style={{display: 'flex', gap: '15px'}}>
+                    {contactData?.instagram && <a href={contactData.instagram} target="_blank" rel="noopener noreferrer" style={{color: '#0ea5e9', fontWeight: 'bold'}}>Instagram</a>}
+                    {contactData?.facebook && <a href={contactData.facebook} target="_blank" rel="noopener noreferrer" style={{color: '#0ea5e9', fontWeight: 'bold'}}>Facebook</a>}
+                    {contactData?.twitter && <a href={contactData.twitter} target="_blank" rel="noopener noreferrer" style={{color: '#0ea5e9', fontWeight: 'bold'}}>Twitter</a>}
+                  </div>
+                </div>
+              )}
+
               <div className="actions" style={{marginTop: '30px'}}>
                 <a className="btn btn-primary" href={`tel:${phone}`}>Call Now</a>
                 <a className="btn btn-light" target="_blank" rel="noopener noreferrer" href={settingsData?.mapUrl || "https://www.google.com/maps/search/?api=1&query=Fabroklean%2C%20Opp%20to%20Fire%20Station%2C%20Ballari%2C%20583104%2C%20Karnataka"}>Get Directions</a>

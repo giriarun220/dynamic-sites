@@ -49,7 +49,11 @@ function Navbar() {
         <div className="container">
           <nav>
             <Link className="brand" to="/">
-              <span className="brandmark">F</span>Fabroklean
+              {settings?.logo ? (
+                <img src={settings.logo} alt="Logo" style={{ maxHeight: '40px', display: 'block' }} />
+              ) : (
+                <><span className="brandmark">F</span>Fabroklean</>
+              )}
             </Link>
             <div className="navlinks">
               <Link to="/about">About</Link>

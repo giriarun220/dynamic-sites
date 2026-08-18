@@ -3,7 +3,7 @@
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--bg, #f7fbfe);
   flex-direction: column;
 }
 
@@ -14,7 +14,7 @@
 }
 
 .admin-sidebar {
-  background-color: #0f172a;
+  background-color: var(--navy, #082f49);
   color: #fff;
   padding: 30px;
   flex-shrink: 0;
@@ -32,13 +32,17 @@
 
 .admin-sidebar h2 {
   margin: 0 0 5px 0;
-  color: #38bdf8;
+  color: var(--cyan, #22d3ee);
+  font-size: 24px;
 }
 
 .admin-sidebar p {
   font-size: 13px;
-  color: #94a3b8;
+  color: #c4dbe5;
   margin: 0 0 30px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 800;
 }
 
 .admin-nav {
@@ -56,28 +60,34 @@
 }
 
 .admin-nav a {
-  color: #cbd5e1;
+  color: #c4dbe5;
   text-decoration: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: all 0.25s ease;
   font-size: 14px;
+  font-weight: 600;
 }
 
 .admin-nav a:hover, .admin-nav a.active {
-  background-color: rgba(56, 189, 248, 0.1);
-  color: #38bdf8;
+  background-color: rgba(34, 211, 238, 0.15);
+  color: var(--cyan, #22d3ee);
 }
 
 .admin-nav .btn-logout {
   margin-top: 20px;
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255,255,255,0.08);
   color: #fff;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 12px 16px;
+  border-radius: 12px;
   cursor: pointer;
   text-align: left;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+.admin-nav .btn-logout:hover {
+  background-color: rgba(255,255,255,0.15);
 }
 
 .admin-content {
@@ -88,43 +98,46 @@
 
 @media (min-width: 768px) {
   .admin-content {
-    padding: 40px 60px;
-    max-width: 1000px;
+    padding: 50px 60px;
+    max-width: 1100px;
   }
 }
 
 .admin-panel {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  background-color: var(--white, #fff);
+  padding: 30px;
+  border-radius: var(--radius, 24px);
+  box-shadow: var(--shadow, 0 20px 60px rgba(8,47,73,.10));
+  border: 1px solid var(--line, #dbe8f0);
 }
 
 @media (min-width: 768px) {
   .admin-panel {
-    padding: 40px;
+    padding: 50px;
   }
 }
 
 .admin-panel-header {
   margin-top: 0;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 15px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--line, #dbe8f0);
+  padding-bottom: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
 }
 
-.admin-panel h2 {
+.admin-panel-header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  letter-spacing: -0.03em;
+  color: var(--navy, #082f49);
 }
 
 .field {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .field.full {
@@ -133,35 +146,38 @@
 
 .field label {
   display: block;
-  font-weight: 600;
+  font-weight: 800;
   margin-bottom: 8px;
-  color: #334155;
-  font-size: 14px;
+  color: var(--ink, #0b1f33);
+  font-size: 13px;
 }
 
 .field input, .field textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--line, #dbe8f0);
+  border-radius: 14px;
   font-family: inherit;
   font-size: 15px;
-  transition: border-color 0.2s;
+  transition: all 0.25s ease;
   box-sizing: border-box;
+  background-color: #fafdf8;
+  background-color: #fff;
 }
 
 .field input:focus, .field textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #7ccbe8;
+  box-shadow: 0 0 0 4px rgba(14,165,233,.09);
 }
 
 .list-item-card {
-  border: 1px solid #e2e8f0;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  background-color: #f8fafc;
+  border: 1px solid var(--line, #dbe8f0);
+  padding: 24px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  background-color: #fff;
+  box-shadow: 0 8px 30px rgba(8,47,73,.04);
 }
 
 .flex-row {
@@ -182,14 +198,14 @@
 
 .blog-post-card {
   padding: 20px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border: 1px solid var(--line, #dbe8f0);
+  border-radius: 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: #f8fafc;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  background-color: #fff;
+  box-shadow: 0 8px 30px rgba(8,47,73,.04);
   gap: 15px;
 }
 
@@ -208,37 +224,39 @@
 }
 
 .blog-post-thumb {
-  width: 80px;
-  height: 60px;
+  width: 90px;
+  height: 70px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px;
   flex-shrink: 0;
 }
 
 @media (min-width: 640px) {
   .blog-post-thumb {
-    width: 100px;
-    height: 70px;
+    width: 120px;
+    height: 85px;
   }
 }
 
 .blog-post-no-thumb {
-  width: 80px;
-  height: 60px;
-  background-color: #e2e8f0;
-  border-radius: 8px;
+  width: 90px;
+  height: 70px;
+  background-color: var(--bg, #f7fbfe);
+  border: 1px solid var(--line, #dbe8f0);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--muted, #5c6f82);
   font-size: 12px;
   flex-shrink: 0;
+  font-weight: 600;
 }
 
 @media (min-width: 640px) {
   .blog-post-no-thumb {
-    width: 100px;
-    height: 70px;
+    width: 120px;
+    height: 85px;
   }
 }
 
@@ -270,79 +288,43 @@
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background-color: #f8fafc;
+  background-color: var(--bg, #f7fbfe);
 }
 
 .login-card {
-  padding: 40px;
+  padding: 50px 40px;
   background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  border-radius: var(--radius, 24px);
+  box-shadow: var(--shadow, 0 20px 60px rgba(8,47,73,.10));
+  border: 1px solid var(--line, #dbe8f0);
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
 }
 
-.btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-  font-size: 15px;
-}
-
-.btn-primary {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #2563eb;
-}
-
-.btn-light {
-  background-color: #f1f5f9;
-  color: #475569;
-}
-
-.btn-light:hover {
-  background-color: #e2e8f0;
-}
-
-.btn-danger {
-  color: #ef4444;
-  background-color: #fef2f2;
-  border: 1px solid #fca5a5;
-}
-
-.btn-danger:hover {
-  background-color: #fee2e2;
-}
-
-.btn-outline-primary {
-  color: #3b82f6;
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-}
-
-.btn-outline-primary:hover {
-  background-color: #dbeafe;
-}
-
+/* Button overwrites from index.css are handled by index.css mostly, but we can refine them */
 .editor-container {
   background-color: white;
-  margin-bottom: 20px;
-  margin-top: 20px;
+  margin-bottom: 24px;
+  margin-top: 24px;
 }
 
 .editor-container .ql-container {
   min-height: 250px;
   font-size: 16px;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  border-color: var(--line, #dbe8f0);
+}
+.editor-container .ql-toolbar {
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  border-color: var(--line, #dbe8f0);
+  background-color: #fafdf8;
+  background-color: #f7fbfe;
 }
 
 @media (min-width: 768px) {
   .editor-container .ql-container {
-    min-height: 350px;
+    min-height: 400px;
   }
 }

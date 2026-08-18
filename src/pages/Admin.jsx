@@ -210,7 +210,10 @@ function Admin() {
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <h2>Fabroklean</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+          <span className="brandmark" style={{ width: '32px', height: '32px', fontSize: '18px' }}>F</span>
+          <h2 style={{ color: '#fff', fontSize: '22px', margin: 0 }}>Fabroklean</h2>
+        </div>
         <p>CMS Dashboard</p>
         
         <nav className="admin-nav">

@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebas
 import { collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, Timestamp, updateDoc } from 'firebase/firestore';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import './Admin.css';
 import ImageUpload from '../components/ImageUpload';
 
 function Admin() {
@@ -185,20 +186,20 @@ function Admin() {
 
   if (!user) {
     return (
-      <div className="container" style={{ padding: '100px 0', maxWidth: '400px' }}>
-        <div className="form-card" style={{ padding: '40px', background: '#fff', borderRadius: '16px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
+      <div className="login-container">
+        <div className="login-card">
           <h2 style={{marginTop: 0, textAlign: 'center'}}>Admin Login</h2>
           <form className="form" onSubmit={handleLogin} style={{display: 'flex', flexDirection: 'column'}}>
             <div className="field full">
               <label>Username or Email</label>
-              <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ padding: '12px', fontSize: '16px' }} />
+              <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="field full">
               <label>Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ padding: '12px', fontSize: '16px' }} />
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
             <div className="field full" style={{marginTop: '12px'}}>
-              <button className="btn btn-primary" style={{width: '100%', padding: '14px', fontSize: '16px'}} type="submit">Login</button>
+              <button className="btn btn-primary" style={{width: '100%'}} type="submit">Login</button>
             </div>
           </form>
         </div>
@@ -207,12 +208,12 @@ function Admin() {
   }
 
   return (
-    <div className="admin-layout" style={{ display: 'flex', minHeight: '100vh', background: '#f8fafc' }}>
-      <aside className="admin-sidebar" style={{ width: '280px', background: '#0f172a', color: '#fff', padding: '30px', flexShrink: 0 }}>
-        <h2 style={{ margin: '0 0 5px 0', color: '#38bdf8' }}>Fabroklean</h2>
-        <p style={{ fontSize: '13px', color: '#94a3b8', margin: '0 0 40px 0' }}>CMS Dashboard</p>
+    <div className="admin-layout">
+      <aside className="admin-sidebar">
+        <h2>Fabroklean</h2>
+        <p>CMS Dashboard</p>
         
-        <nav className="admin-nav" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <nav className="admin-nav">
           <a href="#" className={activeTab === 'homepage' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('homepage');}}>🏠 Homepage</a>
           <a href="#" className={activeTab === 'about' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('about');}}>ℹ️ About Us</a>
           <a href="#" className={activeTab === 'contact' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('contact');}}>📞 Contact Us</a>
@@ -220,16 +221,18 @@ function Admin() {
           <a href="#" className={activeTab === 'doctors' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('doctors');}}>👥 Team Members</a>
           <a href="#" className={activeTab === 'blog' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('blog');}}>📝 Blog Posts</a>
           <a href="#" className={activeTab === 'settings' ? 'active' : ''} onClick={(e) => {e.preventDefault(); setActiveTab('settings');}}>⚙️ Global Settings</a>
-          <button className="btn btn-light" style={{marginTop: '40px', background: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none'}} onClick={handleLogout}>Logout</button>
+          <button className="btn-logout" onClick={handleLogout}>Logout</button>
         </nav>
       </aside>
       
-      <main className="admin-content" style={{ flex: 1, padding: '40px 60px', maxWidth: '1000px' }}>
+      <main className="admin-content">
         
         {/* HOMEPAGE TAB */}
         {activeTab === 'homepage' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ marginTop: 0, marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>Homepage Content</h2>
+          <div className="admin-panel">
+            <div className="admin-panel-header">
+              <h2>Homepage Content</h2>
+            </div>
             <div className="field full"><label>Hospital / Brand Name</label><input value={homepage.name || ''} onChange={e => setHomepage({...homepage, name: e.target.value})} /></div>
             <div className="field full"><label>Operator / Sub-brand</label><input value={homepage.operator || ''} onChange={e => setHomepage({...homepage, operator: e.target.value})} /></div>
             <div className="field full"><label>Hero Headline</label><input value={homepage.headline || ''} onChange={e => setHomepage({...homepage, headline: e.target.value})} /></div>
@@ -243,14 +246,16 @@ function Admin() {
               </div>
             )}
 
-            <button className="btn btn-primary" onClick={saveHomepage} style={{marginTop: '30px', padding: '12px 24px'}}>Save Homepage</button>
+            <button className="btn btn-primary" onClick={saveHomepage} style={{marginTop: '30px'}}>Save Homepage</button>
           </div>
         )}
 
         {/* ABOUT TAB */}
         {activeTab === 'about' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ marginTop: 0, marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>About Us Page</h2>
+          <div className="admin-panel">
+            <div className="admin-panel-header">
+              <h2>About Us Page</h2>
+            </div>
             <div className="field full"><label>Headline</label><input value={about.headline || ''} onChange={e => setAbout({...about, headline: e.target.value})} placeholder="e.g. Your local laundry partner in Ballari." /></div>
             <div className="field full"><label>Main Paragraph</label><textarea value={about.paragraph || ''} onChange={e => setAbout({...about, paragraph: e.target.value})} style={{minHeight: '120px'}} placeholder="Write about your company history and mission..." /></div>
             
@@ -261,48 +266,52 @@ function Admin() {
                 <img src={about.heroImage} alt="About Hero" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '8px' }} />
               </div>
             )}
-            <button className="btn btn-primary" onClick={saveAbout} style={{marginTop: '30px', padding: '12px 24px'}}>Save About Page</button>
+            <button className="btn btn-primary" onClick={saveAbout} style={{marginTop: '30px'}}>Save About Page</button>
           </div>
         )}
 
         {/* CONTACT TAB */}
         {activeTab === 'contact' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ marginTop: 0, marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>Contact Page Details</h2>
+          <div className="admin-panel">
+            <div className="admin-panel-header">
+              <h2>Contact Page Details</h2>
+            </div>
             <div className="field full"><label>Office Address (Detailed)</label><textarea value={contact.address || ''} onChange={e => setContact({...contact, address: e.target.value})} style={{minHeight: '80px'}} placeholder="Full physical address for the contact page" /></div>
             <div className="field full"><label>Working Hours</label><input value={contact.hours || ''} onChange={e => setContact({...contact, hours: e.target.value})} placeholder="e.g. Mon - Sat: 9:00 AM - 8:00 PM" /></div>
             <h3 style={{ marginTop: '30px', color: '#334155' }}>Social Media Links</h3>
             <div className="field full"><label>Instagram URL</label><input value={contact.instagram || ''} onChange={e => setContact({...contact, instagram: e.target.value})} placeholder="https://instagram.com/..." /></div>
             <div className="field full"><label>Facebook URL</label><input value={contact.facebook || ''} onChange={e => setContact({...contact, facebook: e.target.value})} placeholder="https://facebook.com/..." /></div>
             <div className="field full"><label>Twitter/X URL</label><input value={contact.twitter || ''} onChange={e => setContact({...contact, twitter: e.target.value})} placeholder="https://twitter.com/..." /></div>
-            <button className="btn btn-primary" onClick={saveContact} style={{marginTop: '30px', padding: '12px 24px'}}>Save Contact Page</button>
+            <button className="btn btn-primary" onClick={saveContact} style={{marginTop: '30px'}}>Save Contact Page</button>
           </div>
         )}
 
         {/* SETTINGS TAB */}
         {activeTab === 'settings' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ marginTop: 0, marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>Global Settings</h2>
+          <div className="admin-panel">
+            <div className="admin-panel-header">
+              <h2>Global Settings</h2>
+            </div>
             <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '20px' }}>These settings appear in the navigation bar and footer across the whole site.</p>
             <div className="field full"><label>Emergency / Urgent Number</label><input value={settings.emergency || ''} onChange={e => setSettings({...settings, emergency: e.target.value})} /></div>
             <div className="field full"><label>General Phone</label><input value={settings.phone || ''} onChange={e => setSettings({...settings, phone: e.target.value})} /></div>
             <div className="field full"><label>Email Address</label><input value={settings.email || ''} onChange={e => setSettings({...settings, email: e.target.value})} /></div>
             <div className="field full"><label>Google Maps Embed URL</label><input value={settings.mapUrl || ''} onChange={e => setSettings({...settings, mapUrl: e.target.value})} /></div>
-            <button className="btn btn-primary" onClick={saveSettings} style={{marginTop: '30px', padding: '12px 24px'}}>Save Settings</button>
+            <button className="btn btn-primary" onClick={saveSettings} style={{marginTop: '30px'}}>Save Settings</button>
           </div>
         )}
 
         {/* SERVICES TAB */}
         {activeTab === 'services' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px'}}>
-              <h2 style={{ margin: 0 }}>Services</h2>
+          <div className="admin-panel">
+            <div className="admin-panel-header">
+              <h2>Services</h2>
               <button className="btn btn-primary" onClick={() => setServices([...services, { title: '', desc: '', icon: '', image: '' }])}>+ Add Service</button>
             </div>
             
             {services.map((srv, idx) => (
-              <div key={idx} style={{border: '1px solid #e2e8f0', padding: '24px', borderRadius: '12px', marginBottom: '20px', background: '#f8fafc'}}>
-                <div style={{display: 'flex', gap: '20px', marginBottom: '15px'}}>
+              <div key={idx} className="list-item-card">
+                <div className="flex-row">
                   <div className="field full"><label>Title</label><input value={srv.title} onChange={e => {const s = [...services]; s[idx].title = e.target.value; setServices(s);}} /></div>
                   <div className="field"><label>Icon (Emoji)</label><input value={srv.icon} onChange={e => {const s = [...services]; s[idx].icon = e.target.value; setServices(s);}} /></div>
                 </div>
@@ -312,25 +321,25 @@ function Admin() {
                 {srv.image && <img src={srv.image} alt="Service" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px', marginTop: '10px' }} />}
                 
                 <div style={{ textAlign: 'right', marginTop: '15px' }}>
-                  <button className="btn btn-light" style={{color: '#ef4444', border: '1px solid #fca5a5'}} onClick={() => {const s = [...services]; s.splice(idx, 1); setServices(s);}}>Remove Service</button>
+                  <button className="btn btn-danger" onClick={() => {const s = [...services]; s.splice(idx, 1); setServices(s);}}>Remove Service</button>
                 </div>
               </div>
             ))}
-            <button className="btn btn-primary" onClick={saveServices} style={{marginTop: '20px', padding: '12px 24px'}}>Save Services</button>
+            <button className="btn btn-primary" onClick={saveServices} style={{marginTop: '20px'}}>Save Services</button>
           </div>
         )}
 
         {/* DOCTORS TAB */}
         {activeTab === 'doctors' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px'}}>
-              <h2 style={{ margin: 0 }}>Team Members</h2>
+          <div className="admin-panel">
+            <div className="admin-panel-header">
+              <h2>Team Members</h2>
               <button className="btn btn-primary" onClick={() => setDoctors([...doctors, { name: '', role: '', desc: '', image: '' }])}>+ Add Member</button>
             </div>
             
             {doctors.map((docItem, idx) => (
-              <div key={idx} style={{border: '1px solid #e2e8f0', padding: '24px', borderRadius: '12px', marginBottom: '20px', background: '#f8fafc'}}>
-                <div style={{display: 'flex', gap: '20px', marginBottom: '15px'}}>
+              <div key={idx} className="list-item-card">
+                <div className="flex-row">
                   <div className="field full"><label>Name</label><input value={docItem.name} onChange={e => {const d = [...doctors]; d[idx].name = e.target.value; setDoctors(d);}} /></div>
                   <div className="field full"><label>Role / Specialty</label><input value={docItem.role} onChange={e => {const d = [...doctors]; d[idx].role = e.target.value; setDoctors(d);}} /></div>
                 </div>
@@ -340,44 +349,44 @@ function Admin() {
                 {docItem.image && <img src={docItem.image} alt="Profile" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '40px', marginTop: '10px' }} />}
 
                 <div style={{ textAlign: 'right', marginTop: '15px' }}>
-                  <button className="btn btn-light" style={{color: '#ef4444', border: '1px solid #fca5a5'}} onClick={() => {const d = [...doctors]; d.splice(idx, 1); setDoctors(d);}}>Remove Member</button>
+                  <button className="btn btn-danger" onClick={() => {const d = [...doctors]; d.splice(idx, 1); setDoctors(d);}}>Remove Member</button>
                 </div>
               </div>
             ))}
-            <button className="btn btn-primary" onClick={saveDoctors} style={{marginTop: '20px', padding: '12px 24px'}}>Save Team</button>
+            <button className="btn btn-primary" onClick={saveDoctors} style={{marginTop: '20px'}}>Save Team</button>
           </div>
         )}
 
         {/* BLOG TAB */}
         {activeTab === 'blog' && (
-          <div className="admin-panel" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+          <div className="admin-panel">
             {isCreatingPost ? (
               <div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px'}}>
-                  <h2 style={{margin: 0}}>{editingPostId ? 'Edit Post' : 'Write New Post'}</h2>
+                <div className="admin-panel-header">
+                  <h2>{editingPostId ? 'Edit Post' : 'Write New Post'}</h2>
                   <button className="btn btn-light" onClick={cancelEdit}>Cancel</button>
                 </div>
                 
                 <div className="field full" style={{marginBottom: '20px'}}>
                   <label>Post Title</label>
-                  <input placeholder="Enter title here..." value={title} onChange={(e) => setTitle(e.target.value)} style={{fontSize: '18px', padding: '12px'}} />
+                  <input placeholder="Enter title here..." value={title} onChange={(e) => setTitle(e.target.value)} style={{fontSize: '18px'}} />
                 </div>
                 
                 <ImageUpload label="Blog Cover Image" onUploadSuccess={(url) => setThumbnail(url)} />
                 {thumbnail && <img src={thumbnail} alt="Thumbnail" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '8px', marginBottom: '20px' }} />}
 
-                <div style={{background: 'white', marginBottom: '20px', marginTop: '20px'}}>
+                <div className="editor-container">
                   <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '10px' }}>Content</label>
-                  <ReactQuill theme="snow" value={content} onChange={setContent} style={{height: '350px', marginBottom: '60px'}} />
+                  <ReactQuill theme="snow" value={content} onChange={setContent} />
                 </div>
-                <button className="btn btn-primary" onClick={handlePublishPost} style={{padding: '12px 24px', fontSize: '16px'}}>
+                <button className="btn btn-primary" onClick={handlePublishPost} style={{marginTop: '30px'}}>
                   {editingPostId ? 'Save Changes' : 'Publish Post'}
                 </button>
               </div>
             ) : (
               <div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px'}}>
-                  <h2 style={{margin: 0}}>Manage Blog Posts</h2>
+                <div className="admin-panel-header">
+                  <h2>Manage Blog Posts</h2>
                   <button className="btn btn-primary" onClick={() => setIsCreatingPost(true)}>+ Write New Post</button>
                 </div>
                 
@@ -388,21 +397,21 @@ function Admin() {
                 ) : (
                   <div style={{display: 'grid', gap: '20px'}}>
                     {posts.map(post => (
-                      <div key={post.id} style={{padding: '24px', border: '1px solid #e2e8f0', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', boxShadow: '0 2px 4px rgba(0,0,0,0.02)'}}>
-                        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+                      <div key={post.id} className="blog-post-card">
+                        <div className="blog-post-info">
                           {post.thumbnail ? (
-                            <img src={post.thumbnail} alt="thumb" style={{ width: '100px', height: '70px', objectFit: 'cover', borderRadius: '8px' }} />
+                            <img src={post.thumbnail} alt="thumb" className="blog-post-thumb" />
                           ) : (
-                            <div style={{ width: '100px', height: '70px', background: '#e2e8f0', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: '12px' }}>No Image</div>
+                            <div className="blog-post-no-thumb">No Image</div>
                           )}
                           <div>
                             <h4 style={{margin: '0 0 5px', fontSize: '18px', color: '#0f172a'}}>{post.title}</h4>
                             <span style={{fontSize: '13px', color: '#64748b'}}>Published on {post.date?.toDate().toLocaleDateString()}</span>
                           </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                          <button className="btn btn-light" onClick={() => handleEditPost(post)} style={{color: '#3b82f6', border: '1px solid #bfdbfe'}}>Edit</button>
-                          <button className="btn btn-light" onClick={() => handleDeletePost(post.id)} style={{color: '#ef4444', border: '1px solid #fca5a5'}}>Delete</button>
+                        <div className="blog-post-actions">
+                          <button className="btn btn-outline-primary" onClick={() => handleEditPost(post)}>Edit</button>
+                          <button className="btn btn-danger" onClick={() => handleDeletePost(post.id)}>Delete</button>
                         </div>
                       </div>
                     ))}

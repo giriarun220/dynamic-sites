@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import SkeletonLoader from '../components/SkeletonLoader';
 
 function Home() {
   const [homepage, setHomepage] = useState(null);
@@ -33,7 +34,19 @@ function Home() {
     return () => clearTimeout(timeout);
   }, []);
 
-  if (loading) return <div style={{padding: '100px', textAlign: 'center', fontSize: '20px', color: '#64748b'}}>Connecting to database...</div>;
+  if (loading) return (
+    <>
+      <SkeletonLoader type="hero" />
+      <div className="container" style={{paddingTop: '60px'}}>
+        <div style={{textAlign: 'center', marginBottom: '40px'}}>
+          <SkeletonLoader type="text" count={2} />
+        </div>
+        <div className="grid">
+          <SkeletonLoader type="card" count={3} />
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <main id="home">

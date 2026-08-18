@@ -1,0 +1,204 @@
+/* SkeletonLoader.css */
+.skeleton-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.6) 20%,
+    rgba(255, 255, 255, 0.8) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Base Text */
+.skeleton-text {
+  height: 16px;
+  background-color: #e2e8f0;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+.skeleton-title {
+  height: 24px;
+  width: 60%;
+  margin-bottom: 16px;
+}
+.skeleton-line {
+  width: 100%;
+}
+.skeleton-line.short {
+  width: 80%;
+}
+
+/* Card */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 30px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(8, 47, 73, 0.03);
+}
+.skeleton-img {
+  width: 100%;
+  height: 200px;
+  background-color: #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+/* Profile / Team */
+.skeleton-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 30px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(8, 47, 73, 0.03);
+}
+.skeleton-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  margin-bottom: 20px;
+}
+.skeleton-profile .skeleton-title {
+  margin: 0 auto 10px auto;
+}
+.skeleton-profile .skeleton-line.short {
+  margin: 0 auto;
+  width: 50%;
+}
+
+/* Hero */
+.skeleton-hero {
+  padding: 100px 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 70vh;
+  background-color: #f7fbfe;
+  width: 100%;
+}
+.skeleton-hero-title {
+  height: 60px;
+  width: 70%;
+  max-width: 600px;
+  margin-bottom: 30px;
+}
+.hero-line {
+  height: 20px;
+  max-width: 500px;
+}
+.skeleton-btn {
+  width: 160px;
+  height: 54px;
+  border-radius: 30px;
+  background-color: #e2e8f0;
+  margin-top: 20px;
+}
+
+/* Dashboard Loader */
+.skeleton-dashboard {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #f7fbfe;
+}
+.skeleton-sidebar {
+  width: 280px;
+  background-color: #082f49;
+  padding: 30px;
+  flex-shrink: 0;
+  display: none;
+}
+@media (min-width: 768px) {
+  .skeleton-sidebar {
+    display: block;
+  }
+}
+.skeleton-sidebar .skeleton-title {
+  background-color: rgba(255,255,255,0.1);
+  margin-bottom: 40px;
+}
+.skeleton-nav-item {
+  height: 40px;
+  background-color: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  margin-bottom: 15px;
+  position: relative;
+  overflow: hidden;
+}
+.skeleton-nav-item::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(90deg, transparent 0, rgba(255,255,255,0.05) 20%, rgba(255,255,255,0.1) 60%, transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-content {
+  flex: 1;
+  padding: 50px 60px;
+  max-width: 1100px;
+}
+.skeleton-panel {
+  background-color: #fff;
+  padding: 50px;
+  border-radius: 24px;
+  border: 1px solid #dbe8f0;
+  box-shadow: 0 20px 60px rgba(8,47,73,.10);
+  min-height: 600px;
+}
+.skeleton-field {
+  height: 50px;
+  background-color: #f1f5f9;
+  border-radius: 14px;
+  margin-bottom: 24px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.skeleton-field::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(90deg, transparent 0, rgba(255,255,255,0.4) 20%, rgba(255,255,255,0.8) 60%, transparent);
+  animation: shimmer 1.5s infinite;
+}

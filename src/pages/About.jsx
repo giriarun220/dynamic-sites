@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import SkeletonLoader from '../components/SkeletonLoader';
 
 function About() {
   const [aboutData, setAboutData] = useState(null);
@@ -32,7 +33,17 @@ function About() {
     return () => clearTimeout(timeout);
   }, []);
 
-  if (loading) return <div style={{padding: '100px', textAlign: 'center', fontSize: '20px', color: '#64748b'}}>Connecting to database...</div>;
+  if (loading) return (
+    <main className="container" style={{paddingTop: '60px'}}>
+      <div style={{textAlign: 'center', marginBottom: '60px'}}>
+        <SkeletonLoader type="text" className="skeleton-title" style={{margin: '0 auto 20px'}} />
+        <SkeletonLoader type="text" count={3} />
+      </div>
+      <div className="grid">
+        <SkeletonLoader type="profile" count={4} />
+      </div>
+    </main>
+  );
 
   return (
     <main>

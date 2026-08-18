@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, Timestamp, updateDoc } from 'firebase/firestore';
+import SkeletonLoader from '../components/SkeletonLoader';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import './Admin.css';
@@ -182,7 +183,7 @@ function Admin() {
     }
   };
 
-  if (loading) return <div style={{padding: '100px', textAlign: 'center'}}>Loading...</div>;
+  if (loading) return <SkeletonLoader type="dashboard" count={1} />;
 
   if (!user) {
     return (

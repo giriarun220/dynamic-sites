@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase';
+import SkeletonLoader from '../components/SkeletonLoader';
 
 function Blog() {
   const [posts, setPosts] = useState([]);
@@ -43,7 +44,7 @@ function Blog() {
       <section style={{paddingTop: '60px'}}>
         <div className="container">
           {loading ? (
-            <div style={{textAlign: 'center', padding: '50px', fontSize: '20px', color: '#64748b'}}>Connecting to database...</div>
+            <SkeletonLoader type="card" count={3} />
           ) : posts.length === 0 ? (
             <div style={{textAlign: 'center', padding: '50px', background: '#fff', borderRadius: '24px'}}>
               <p style={{color: 'var(--muted)'}}>No articles published yet. Check back soon!</p>
